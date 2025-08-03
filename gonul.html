@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bir Kod Yazdım...</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Fira Code', monospace;
+      background: linear-gradient(270deg, #ff7e5f, #feb47b, #86a8e7, #91eae4);
+      background-size: 800% 800%;
+      animation: gradientShift 20s ease infinite;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 20px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    @keyframes gradientShift {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    .code-line {
+      font-size: 1.3rem;
+      margin: 8px 0;
+      opacity: 0;
+      transform: translateY(15px);
+      animation: fadeInUp 0.7s forwards;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: default;
+      white-space: pre-wrap;
+    }
+
+    .code-line:nth-child(1) { animation-delay: 0.5s; }
+    .code-line:nth-child(2) { animation-delay: 1.1s; }
+    .code-line:nth-child(3) { animation-delay: 1.7s; }
+    .code-line:nth-child(4) { animation-delay: 2.3s; }
+    .code-line:nth-child(5) { animation-delay: 2.9s; }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #runButton {
+      margin-top: 50px;
+      padding: 14px 30px;
+      font-size: 18px;
+      background: linear-gradient(45deg, #6a11cb, #2575fc);
+      border: none;
+      border-radius: 40px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(38, 60, 187, 0.4);
+      transition: background 0.4s ease, transform 0.2s ease;
+      user-select: none;
+      position: relative;
+      z-index: 10;
+    }
+
+    #runButton:hover {
+      background: linear-gradient(45deg, #2575fc, #6a11cb);
+      transform: scale(1.05);
+    }
+
+    #message {
+      margin-top: 40px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #e0fffa;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease, transform 1s ease;
+      user-select: none;
+    }
+
+    #message.visible {
+      opacity: 1;
+      transform: translateY(0);
+      text-shadow: 0 0 10px #e0fffa;
+    }
+
+    /* Emoji styles */
+    .emoji {
+      position: fixed;
+      font-size: 24px;
+      animation: floatUp 3s linear forwards;
+      pointer-events: none;
+      user-select: none;
+      z-index: 1000;
+    }
+
+    @keyframes floatUp {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-150px) scale(1.5);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="codeContainer">
+    <div class="code-line" id="line1"></div>
+    <div class="code-line" id="line2"></div>
+    <div class="code-line" id="line3"></div>
+    <div class="code-line" id="line4"></div>
+    <div class="code-line" id="line5"></div>
+  </div>
+
+  <button id="runButton">Çalıştır</button>
+
+  <div id="message">Eğer bu mesaj biraz bile moral verdiyse, ben görevimi yaptım. 🙂</div>
+
+  <script>
+    const lines = [
+      "# Bugün biraz fazla kod yazdım çünkü...",
+      "# Birini istemeden kırdım.",
+      "# Ona fazla yüklendim. Farkındayım.",
+      "# Ama bu kodun sonunda bir şey olacak...",
+      "# Eğer gülümserse, bu kod başarıyla çalıştı demektir."
+    ];
+
+    function typeWriter(text, element, delay = 50) {
+      let i = 0;
+      element.textContent = "";
+      function typing() {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          i++;
+          setTimeout(typing, delay);
+        }
+      }
+      typing();
+    }
+
+    // Yazıları harf harf yazdır
+    lines.forEach((line, index) => {
+      const el = document.getElementById("line" + (index + 1));
+      setTimeout(() => {
+        typeWriter(line, el);
+      }, index * 1800);
+    });
+
+    const runButton = document.getElementById('runButton');
+    const message = document.getElementById('message');
+
+    // Emoji seçenekleri
+    const emojis = ['❤️', '💙', '💜', '💛', '💚', '✨', '🌟', '💫'];
+
+    function createEmoji() {
+      const emoji = document.createElement('div');
+      emoji.classList.add('emoji');
+      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      emoji.style.left = Math.random() * window.innerWidth + 'px';
+      emoji.style.top = window.innerHeight + 20 + 'px';
+      emoji.style.fontSize = (16 + Math.random() * 20) + 'px';
+      document.body.appendChild(emoji);
+
+      setTimeout(() => {
+        emoji.remove();
+      }, 3000);
+    }
+
+    runButton.addEventListener('click', () => {
+      message.classList.add('visible');
+      // 20 emoji yağmuru
+      for (let i = 0; i < 20; i++) {
+        setTimeout(createEmoji, i * 150);
+      }
+    });
+  </script>
+
+</body>
+</html>
